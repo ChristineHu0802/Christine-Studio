@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bordeaux Wine Marathon — Visual Collaboration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ Design tokens — kept deliberately small ============ */
+:root{
+  --bg:#FAF7F2;
+  --ink:#1C1310;
+  --muted:#6E5F53;
+  --muted-soft:#8C7E71;
+  --card:#FFFFFF;
+  --border:#E6DDD0;
+  --bordeaux:#4A1420;
+  --bordeaux-deep:#2B0D14;
+  --bordeaux-wash:rgba(74,20,32,.055);
+  --gold:#A9843B;
+  --cream:#F3EBDD;
+
+  --serif:"Playfair Display", Georgia, serif;
+  --sans:"Source Sans 3", system-ui, -apple-system, sans-serif;
+
+  /* one type scale, used everywhere — nothing outside this list */
+  --fs-display: clamp(46px,7vw,78px);
+  --fs-h2: clamp(32px,4.2vw,44px);
+  --fs-h3: 21px;
+  --fs-price: clamp(48px,6vw,70px);
+  --fs-body: 16.5px;
+  --fs-small: 14px;
+  --fs-eyebrow: 11.5px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:var(--fs-body)/1.75 var(--sans);letter-spacing:.01em;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;
+}
+.wrap{width:min(1024px,calc(100% - 48px));margin:auto}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;color:var(--ink)}
+h1{font-size:var(--fs-display);line-height:1.03;letter-spacing:-.03em}
+h2{font-size:var(--fs-h2);line-height:1.12;letter-spacing:-.015em;margin:6px 0 18px}
+h3{font-size:var(--fs-h3);line-height:1.35;font-weight:500}
+p{margin:0 0 0;font-size:var(--fs-body)}
+
+/* single label style — replaces the previous kicker/meta/metric-label/when/flow-no mix */
+.eyebrow{
+  font:600 var(--fs-eyebrow) var(--sans);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--bordeaux);display:inline-block;
+}
+.eyebrow.on-dark{color:var(--gold)}
+
+/* ============ nav ============ */
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:201;width:0%;transition:width .1s linear}
+nav.top{position:sticky;top:0;z-index:200;background:rgba(250,247,242,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.navrow{display:flex;align-items:center;justify-content:space-between;height:62px;gap:24px}
+.brand{display:flex;align-items:center;gap:10px;font:500 14.5px var(--serif);letter-spacing:.01em;white-space:nowrap}
+.brand img{height:34px;width:auto;display:block}
+.brand em{font-style:normal;color:var(--bordeaux)}
+.navlinks{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{
+  white-space:nowrap;font:500 12.5px var(--sans);letter-spacing:.02em;color:var(--muted);text-decoration:none;
+  padding:8px 12px;border-radius:5px;transition:150ms;
+}
+.navlinks a:hover{color:var(--ink);background:var(--bordeaux-wash)}
+.navlinks a.active{color:var(--bordeaux)}
+
+/* ============ hero — full-bleed photographic panel ============ */
+.hero{position:relative;min-height:78vh;display:flex;align-items:flex-end;overflow:hidden;color:#F3EBDD}
+.hero-photo{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(20,7,10,.28) 0%,rgba(20,7,10,.6) 60%,rgba(15,5,8,.9) 100%),
+    url("hero-vineyard-run.jpg") center 30%/cover no-repeat;
+}
+.hero-inner{position:relative;padding:0 0 64px;width:100%}
+.hero-logo{
+  display:block;height:84px;width:auto;margin-bottom:10px;opacity:.95;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.45));
+}
+.hero .eyebrow{color:var(--gold)}
+.hero h1{color:#FBF6EC;margin:16px 0 22px;max-width:820px}
+.hero-copy{max-width:640px;color:rgba(251,246,236,.82);font-size:17.5px;line-height:1.75}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+.badge{
+  font:500 12.5px var(--sans);letter-spacing:.03em;color:#F3EBDD;border:1px solid rgba(243,235,221,.35);
+  background:rgba(243,235,221,.06);padding:9px 16px;border-radius:20px;
+}
+
+.rule{height:1px;background:var(--border);width:100%}
+section{padding:100px 0}
+section.alt{background:linear-gradient(180deg,#F3EEE5,#FAF7F2)}
+.section-label{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.section-label:before,.section-label:after{content:"";height:1px;background:var(--border);flex:1}
+.intro{max-width:720px;color:var(--muted);margin:0 0 40px;font-size:var(--fs-body)}
+
+/* ============ photo placeholder tile — the recurring photographic motif ============ */
+.photo{
+  position:relative;overflow:hidden;border-radius:3px;
+  background:
+    radial-gradient(140% 100% at 15% 0%,rgba(169,132,59,.28),transparent 55%),
+    linear-gradient(160deg,#5A1C2A 0%,#33101B 55%,#1C0A0F 100%);
+}
+.photo:after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.photo-cap{
+  position:absolute;left:0;right:0;bottom:0;padding:14px 16px;
+  background:linear-gradient(0deg,rgba(15,5,8,.68),transparent);
+  font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#F3EBDD;
+}
+.photo.r43{aspect-ratio:4/3}
+.photo.r169{aspect-ratio:16/9}
+.photo.r34{aspect-ratio:3/4}
+
+/* ============ generic cards ============ */
+.grid2{display:grid;grid-template-columns:1.3fr .7fr;gap:26px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:30px;box-shadow:0 1px 2px rgba(28,19,16,.04);transition:200ms ease-out}
+.card.accent{border-top:2px solid var(--bordeaux)}
+.card:hover{box-shadow:0 6px 16px rgba(28,19,16,.06);border-color:#DED2C0}
+.content-card h3{font-size:24px;margin:14px 0 10px}
+.photo-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tag{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--muted);background:#fff}
+.details{margin-top:20px;border-top:1px solid var(--border)}
+.details button{width:100%;min-height:48px;border:0;background:transparent;color:var(--ink);font:500 13px var(--sans);display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:14px 0}
+.details button:hover{color:var(--bordeaux)}
+.details-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .2s ease-out}
+.details-content>div{overflow:hidden;color:var(--muted)}
+.details.open .details-content{grid-template-rows:1fr}
+.details .chev{transition:.2s}.details.open .chev{transform:rotate(180deg)}
+
+/* ============ fee — single dark plate, price + policy note together ============ */
+.fee-plate{
+  background:linear-gradient(150deg,#3E1119,#1E0810);color:#F3EBDD;border-radius:12px;
+  padding:52px;display:grid;grid-template-columns:.9fr 1.1fr;gap:44px;align-items:center;
+}
+.fee-plate .eyebrow{color:var(--gold)}
+.price-num{font:400 var(--fs-price)/1 var(--serif);letter-spacing:-.02em;margin:14px 0 6px;color:#FBF6EC}
+.price-label{font:500 13px var(--sans);color:rgba(243,235,221,.65)}
+.fee-divider{width:1px;align-self:stretch;background:rgba(243,235,221,.16)}
+.fee-note h3{color:#FBF6EC;margin-bottom:12px}
+.fee-note p{color:rgba(243,235,221,.72);font-size:15px;line-height:1.8}
+.fee-note p + p{margin-top:10px}
+
+/* ============ deliverables ============ */
+.deliver{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.metric{font:400 38px/1 var(--serif);letter-spacing:-.02em;margin:14px 0 6px;color:var(--bordeaux)}
+.deliver .card p{color:var(--muted);font-size:15px}
+.proclamation{margin-top:26px;padding:18px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--muted);text-align:center;font-size:15px}
+
+.tabs{margin-top:34px}
+.tabbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tab{min-height:44px;padding:0 18px;border:1px solid var(--ink);border-radius:6px;background:transparent;color:var(--ink);font:500 12.5px var(--sans);letter-spacing:.03em;cursor:pointer;transition:200ms ease-out}
+.tab:hover{background:var(--bordeaux-wash);border-color:var(--bordeaux);color:var(--bordeaux)}
+.tab.active{background:var(--bordeaux);border-color:var(--bordeaux);color:#fff}
+.panel{display:none;max-width:760px;margin:18px auto 0}.panel.active{display:block}
+.panel .card p{color:var(--muted);font-size:15px}
+
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.flow .card{min-height:170px}
+.flow .card p{color:var(--muted);font-size:15px}
+
+/* ============ video embed ============ */
+.video-note{
+  display:flex;gap:14px;align-items:flex-start;background:var(--bordeaux-wash);border:1px solid var(--border);
+  border-radius:10px;padding:18px 20px;margin-bottom:32px;color:var(--muted);font-size:14px;line-height:1.7
+}
+.video-note b{color:var(--bordeaux);font-weight:600}
+.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.reel{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.reel-frame{position:relative;aspect-ratio:9/16;background:linear-gradient(160deg,#5A1C2A,#1C0A0F);overflow:hidden}
+.reel-frame video{width:100%;height:100%;object-fit:cover;display:block;background:transparent}
+.reel-frame .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(243,235,221,.78);pointer-events:none}
+.reel-frame .ph svg{width:34px;height:34px;opacity:.85}
+.reel-frame .ph span{font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase}
+.reel-info{padding:16px 18px}
+.reel-info p{color:var(--muted);font-size:14px;margin-top:6px}
+
+/* ============ timeline ============ */
+.timeline{max-width:860px;margin:36px auto 0;position:relative;padding-left:28px}
+.timeline:before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border)}
+.trow{position:relative;padding:0 0 46px 30px}
+.trow:last-child{padding-bottom:0}
+.trow:before{content:"";position:absolute;left:-28px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--bordeaux);border:3px solid #fff;box-shadow:0 0 0 1px var(--border)}
+.trow h3{font-size:24px;margin:10px 0 8px}
+.trow p{color:var(--muted);font-size:15px}
+.trow p + p{margin-top:8px}
+
+.scope-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.scope-grid .card p{color:var(--muted);font-size:15px}
+
+.cta{background:var(--bordeaux);color:#F3EBDD;border-radius:14px;padding:48px 44px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.cta h3{color:#FBF6EC;font-size:26px}
+.cta p{color:rgba(243,235,221,.75);margin:8px 0 0;max-width:420px;font-size:15px}
+.cta a.btn{background:#F3EBDD;color:var(--bordeaux);font:600 14px var(--sans);text-decoration:none;padding:14px 26px;border-radius:8px;white-space:nowrap;transition:150ms}
+.cta a.btn:hover{background:#fff}
+
+footer{padding:56px 0 64px;text-align:center;color:var(--muted);font-size:13px}
+footer img{width:190px;height:auto;margin-bottom:18px;opacity:.92}
+
+button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-offset:3px}
+
+@media(max-width:900px){
+ .deliver{grid-template-columns:1fr 1fr}
+ .flow{grid-template-columns:1fr 1fr}
+ .reels{grid-template-columns:1fr 1fr}
+ .fee-plate{grid-template-columns:1fr;gap:30px}
+ .fee-divider{display:none}
+}
+@media(max-width:760px){
+ .wrap{width:min(100% - 32px,1024px)}
+ section{padding:72px 0}
+ .hero{min-height:64vh}
+ .hero-logo{height:64px;margin-bottom:16px}
+ .hero-inner{padding-bottom:44px}
+ .grid2,.deliver,.flow,.scope-grid{grid-template-columns:1fr}
+ .photo-trio{grid-template-columns:1fr 1fr}
+ .reels{grid-template-columns:1fr}
+ .fee-plate{padding:34px 26px}
+ .tabbar{display:grid;grid-template-columns:1fr}
+ .tab{width:100%}
+ .card{padding:24px}
+ .navrow{height:56px}
+ .cta{padding:34px 26px;flex-direction:column;align-items:flex-start;text-align:left}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<nav class="top">
+  <div class="wrap navrow">
+    <div class="brand"><img src="bwm-logo-mark.png" alt="Bordeaux Wine Marathon emblem"> Bordeaux <em>Wine</em> Marathon</div>
+    <div class="navlinks" id="navlinks">
+      <a href="#capture">拍攝內容</a>
+      <a href="#fee">合作費用</a>
+      <a href="#deliver">交付清單</a>
+      <a href="#daily">每日短影音</a>
+      <a href="#video">影片示範</a>
+      <a href="#delivery">交付時程</a>
+      <a href="#contact">聯繫</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-photo" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <img class="hero-logo" src="bwm-logo-mark-white.png" alt="Bordeaux Wine Marathon emblem">
+    <span class="eyebrow">Visual Collaboration Proposal · 2026</span>
+    <h1>Bordeaux Wine Marathon</h1>
+    <p class="hero-copy">France Journey — 以相機平面攝影為主要內容，搭配旅程期間的手機即時社群短影音，記錄 Bordeaux Wine Marathon 至 Paris 的完整旅程。</p>
+    <div class="hero-badges">
+      <span class="badge">150+ 精選照片</span>
+      <span class="badge">每日快剪短影音</span>
+      <span class="badge">Photography First</span>
+    </div>
+  </div>
+</header>
+
+<div class="rule"></div>
+
+<main>
+
+<section id="capture">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">拍攝內容</span></div>
+  <h2>這趟會拍什麼？</h2>
+  <p class="intro">整趟影像圍繞兩條內容主軸進行。平面將以相機拍攝為主，手機則負責旅程中的即時社群紀錄。以下為拍攝方向，而非額外的交付項目。</p>
+  <div class="grid2">
+    <article class="card accent content-card">
+      <span class="eyebrow">Content — 馬拉松 × 葡萄酒文化</span>
+      <h3 style="font-size:24px;margin-top:14px">馬拉松 × 葡萄酒文化</h3>
+      <p style="color:var(--muted)">以波爾多紅酒馬拉松為核心，延伸至酒莊、葡萄園、品飲、賽前活動與當地葡萄酒文化。</p>
+      <div class="photo-trio">
+        <div class="photo r43"><span class="photo-cap">Château</span></div>
+        <div class="photo r43"><span class="photo-cap">Vineyard</span></div>
+        <div class="photo r43"><span class="photo-cap">Wine Tasting</span></div>
+      </div>
+      <div class="tags">
+        <span class="tag">Wine Marathon</span><span class="tag">Mille-pâtes</span><span class="tag">Château</span><span class="tag">Vineyard</span><span class="tag">Wine Tasting</span><span class="tag">Saint-Émilion</span>
+      </div>
+      <div class="details">
+        <button aria-expanded="false">查看拍攝細項 <span class="chev">⌄</span></button>
+        <div class="details-content"><div><p>賽前準備、領取物資、Mille-pâtes 晚宴、馬拉松現場、跑者互動、酒莊參訪、葡萄園環境、品飲、酒款細節與 Saint-Émilion 氛圍紀錄。</p></div></div>
+      </div>
+    </article>
+    <article class="card content-card">
+      <span class="eyebrow">Content — 法國之旅 × Lifestyle</span>
+      <h3 style="font-size:24px;margin-top:14px">法國之旅 × Lifestyle</h3>
+      <p style="color:var(--muted)">從 Bordeaux、Arcachon、Dune du Pilat 到 Paris，呈現城市、餐飲、酒吧、藝術與旅程中的自然互動。</p>
+      <div class="photo-trio" style="grid-template-columns:1fr 1fr">
+        <div class="photo r34"><span class="photo-cap">Arcachon</span></div>
+        <div class="photo r34"><span class="photo-cap">Paris</span></div>
+      </div>
+      <div class="tags">
+        <span class="tag">Bordeaux</span><span class="tag">Arcachon</span><span class="tag">Dune du Pilat</span><span class="tag">Paris</span><span class="tag">Fine Dining</span><span class="tag">Art & Architecture</span>
+      </div>
+      <div class="details">
+        <button aria-expanded="false">查看拍攝細項 <span class="chev">⌄</span></button>
+        <div class="details-content"><div><p>Bordeaux 城市旅行、Arcachon 海岸與生蠔、Dune du Pilat、Hotel La Coorniche 日落、巴黎街拍、餐廳／酒吧、藝術建築與團員 Lifestyle 自然互動。</p></div></div>
+      </div>
+    </article>
+  </div>
+</div>
+</section>
+
+<section class="alt" id="fee">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">合作範圍與費用</span></div>
+  <h2>合作範圍與費用</h2>
+  <div class="fee-plate">
+    <div>
+      <span class="eyebrow">Collaboration Fee</span>
+      <div class="price-num">NT$30,000</div>
+      <div class="price-label">合作執行費 · Photography First</div>
+    </div>
+    <div class="fee-divider"></div>
+    <div class="fee-note">
+      <h3>合作執行說明</h3>
+      <p>本次以相機平面攝影為主要專業服務，搭配手機即時社群內容輔助，採「共同參與旅程＋影像紀錄」形式進行。</p>
+      <p>旅程相關必要交通、住宿及行程費用由合作方提供／負擔；並非 11 天全天候隨行商業攝影或全程專業動態跟拍。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="deliver">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">交付清單</span></div>
+  <h2>這次合作你會拿到什麼？</h2>
+  <p class="intro">以下四項構成本次合作的完整交付內容。</p>
+
+  <div class="deliver">
+    <div class="card accent">
+      <div class="metric">150+</div>
+      <span class="eyebrow">Edited Photos</span>
+      <p>全程累計至少 150 張精選調色照片；每日先出的 10–20 張包含於總數內。</p>
+    </div>
+    <div class="card">
+      <div class="metric">1+ /日</div>
+      <span class="eyebrow">Daily Short Video</span>
+      <p>主要行程日至少 1 支，約 15–30 秒手機直式旅程快剪，依素材與行程可彈性增加。</p>
+    </div>
+    <div class="card">
+      <div class="metric">全程</div>
+      <span class="eyebrow">Mobile Footage</span>
+      <p>旅程期間每日提供當日手機拍攝之原始短影音素材。</p>
+    </div>
+    <div class="card">
+      <div class="metric">毛片</div>
+      <span class="eyebrow">Photo Originals</span>
+      <p>返台後除精選調色檔外，其餘相機平面毛片亦可一併提供。</p>
+    </div>
+  </div>
+
+  <div class="proclamation">以上為本次合作完整交付內容。下方僅進一步說明執行方式與交付時間，並非額外增加的交付項目。</div>
+
+  <div class="tabs">
+    <div class="tabbar">
+      <button class="tab active" data-tab="trip">旅程中會拿到</button>
+      <button class="tab" data-tab="after">返台後會拿到</button>
+      <button class="tab" data-tab="raw">毛片內容</button>
+    </div>
+    <div class="panel active" id="trip"><div class="card"><h3 style="font-size:20px;margin-bottom:8px">During the Trip</h3><p>主要行程日：至少 1 支手機快剪＋約 10–20 張精選調色照片＋當日手機拍攝毛片。</p></div></div>
+    <div class="panel" id="after"><div class="card"><h3 style="font-size:20px;margin-bottom:8px">After the Trip</h3><p>返台後 7 個工作天內完成其餘照片整理與統一調色，使全案累計至少 150 張精選調色照片。</p></div></div>
+    <div class="panel" id="raw"><div class="card"><h3 style="font-size:20px;margin-bottom:8px">Original Materials</h3><p>手機毛片於旅程期間每日提供；其餘相機平面毛片於返台後一併整理提供。</p></div></div>
+  </div>
+</div>
+</section>
+
+<section class="alt" id="daily">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">每日短影音怎麼執行</span></div>
+  <h2>每日短影音怎麼執行？</h2>
+  <p class="intro">以「即拍、即剪、即時分享」為核心，保留旅程自然感，同時讓每天都有能直接發布的社群內容。</p>
+  <div class="flow">
+    <div class="card"><span class="eyebrow">01 · Capture</span><h3 style="margin-top:10px">手機直式紀錄</h3><p>景點、酒莊、Cheers、馬拉松、餐飲、街景與旅程花絮。</p></div>
+    <div class="card"><span class="eyebrow">02 · Select</span><h3 style="margin-top:10px">快速挑選</h3><p>依當日內容挑選適合社群使用的片段。</p></div>
+    <div class="card"><span class="eyebrow">03 · Edit</span><h3 style="margin-top:10px">輕量快剪</h3><p>素材串接＋音樂＋簡易文字，以手機快速完成。</p></div>
+    <div class="card"><span class="eyebrow">04 · Deliver</span><h3 style="margin-top:10px">即時交付</h3><p>快剪完成後，同步提供當日手機毛片。</p></div>
+  </div>
+  <div class="proclamation">每日短影音屬輕量社群旅程紀錄，不以正式商業 Reels 規格製作；不包含完整腳本企劃、進階調色、動畫特效、大量字幕或複雜後製。</div>
+</div>
+</section>
+
+<section id="video">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">短影音示範</span></div>
+  <h2>短影音會是什麼感覺？</h2>
+  <p class="intro">以下為短影音成品呈現方式的示意版位，實際示範／參考影片確認後可直接嵌入播放，或替換為 Instagram／TikTok 貼文連結。</p>
+
+  <div class="video-note">
+    <span>▶</span>
+    <div><b>給製作者的提醒：</b>將下方每個 <code>&lt;video&gt;</code> 的 <code>src</code> 換成實際 mp4 檔案連結（或雲端直連網址）即可直接播放；若想改用 Instagram／TikTok 貼文嵌入，改用該平台提供的 <code>&lt;blockquote&gt;</code> embed 代碼取代 video 區塊即可，版位尺寸已預留直式 9:16 比例。</div>
+  </div>
+
+  <div class="reels">
+    <div class="reel">
+      <div class="reel-frame">
+        <video controls muted playsinline poster="" preload="none">
+          <!-- 替換 src 為實際短影音連結，例如: <source src="videos/wine-chateau.mp4" type="video/mp4"> -->
+          您的瀏覽器不支援影片播放。
+        </video>
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+          <span>待嵌入影片</span>
+        </div>
+      </div>
+      <div class="reel-info"><span class="eyebrow">Reference 01 · Wine / Château</span><p>酒莊、倒酒、Cheers、環境與人物互動。</p></div>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <video controls muted playsinline poster="" preload="none">
+          您的瀏覽器不支援影片播放。
+        </video>
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+          <span>待嵌入影片</span>
+        </div>
+      </div>
+      <div class="reel-info"><span class="eyebrow">Reference 02 · Travel / Lifestyle</span><p>城市、餐飲、街景、人物與旅行氛圍。</p></div>
+    </div>
+    <div class="reel">
+      <div class="reel-frame">
+        <video controls muted playsinline poster="" preload="none">
+          您的瀏覽器不支援影片播放。
+        </video>
+        <div class="ph">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
+          <span>待嵌入影片</span>
+        </div>
+      </div>
+      <div class="reel-info"><span class="eyebrow">Reference 03 · Marathon Day</span><p>賽前、活動現場、跑者互動與完賽片段。</p></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="alt" id="delivery">
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">交付時程</span></div>
+  <h2>什麼時候拿到？</h2>
+  <div class="timeline">
+    <div class="trow">
+      <span class="eyebrow">During the Trip · 旅程期間</span>
+      <h3>每日即時短影音 ＋ 10–20 張精選照片 ＋ 當日手機毛片</h3>
+      <p>主要行程日先提供可即時發布內容。每日優先提供的 10–20 張精選照片屬於全案 150+ 張的一部分，非額外另計。原則於當日晚間至隔日上午陸續提供。</p>
+      <p>如遇長途移動、馬拉松、晚宴或較晚結束之行程，可依實際狀況彈性順延。</p>
+    </div>
+    <div class="trow">
+      <span class="eyebrow">After the Trip · 返台後</span>
+      <h3>7 個工作天內完成最終平面交付</h3>
+      <p>完成其餘照片整理、篩選與統一調色，使全案累計至少 150 張精選調色照片；其餘相機平面毛片與手機素材可一併整理提供。</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+  <div class="section-label"><span class="eyebrow">合作執行說明</span></div>
+  <h2>合作執行說明</h2>
+  <div class="scope-grid">
+    <div class="card accent"><span class="eyebrow">Photography First</span><h3 style="margin-top:10px">平面攝影為主</h3><p>平面以相機拍攝為主，作為本次主要專業服務內容。</p></div>
+    <div class="card"><span class="eyebrow">Daily Mobile Content</span><h3 style="margin-top:10px">每日手機紀錄</h3><p>手機負責每日輕量旅程短影音與即時素材紀錄。</p></div>
+    <div class="card"><span class="eyebrow">Raw Material Included</span><h3 style="margin-top:10px">毛片一併提供</h3><p>手機毛片每日提供；返台後可一併提供其餘相機平面毛片。</p></div>
+  </div>
+  <div class="proclamation">若後續希望使用本次素材另外製作完整 Reels、招募影片、廣告影片或其他進階動態內容，可再依需求另外討論。</div>
+</div>
+</section>
+
+<section id="contact">
+<div class="wrap">
+  <div class="cta">
+    <div>
+      <h3>對這份提案有想法？</h3>
+      <p>歡迎針對拍攝範圍、交付內容或時程回信討論，可依實際行程再做微調。</p>
+    </div>
+    <a class="btn" href="mailto:hello@example.com?subject=Bordeaux%20Wine%20Marathon%20Proposal">回覆這份提案</a>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="wrap">
+  <img src="bwm-logo-full.png" alt="Bordeaux Wine Marathon">
+  <span class="eyebrow">Bordeaux Wine Marathon · Visual Collaboration · 2026</span>
+</div>
+</footer>
+
+<script>
+document.querySelectorAll('.details button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const box=btn.closest('.details');
+    box.classList.toggle('open');
+    btn.setAttribute('aria-expanded',box.classList.contains('open'));
+  });
+});
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+const progress = document.getElementById('progress');
+function updateProgress(){
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progress.style.width = scrolled + '%';
+}
+document.addEventListener('scroll', updateProgress, {passive:true});
+updateProgress();
+
+const navLinks = Array.from(document.querySelectorAll('#navlinks a'));
+const sections = navLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = '#' + entry.target.id;
+      navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+    }
+  });
+},{rootMargin:'-40% 0px -50% 0px'});
+sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
