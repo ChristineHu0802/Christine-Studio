@@ -128,6 +128,7 @@ section.alt{background:linear-gradient(180deg,#F3EEE5,#FAF7F2)}
 .card:hover{box-shadow:0 6px 16px rgba(28,19,16,.06);border-color:#DED2C0}
 .content-card h3{font-size:24px;margin:14px 0 10px}
 .photo-trio{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:20px}
+.photo-quad{grid-template-columns:repeat(4,1fr)}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .tag{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--muted);background:#fff}
 .details{margin-top:20px;border-top:1px solid var(--border)}
@@ -156,6 +157,21 @@ section.alt{background:linear-gradient(180deg,#F3EEE5,#FAF7F2)}
 .metric{font:400 38px/1 var(--serif);letter-spacing:-.02em;margin:14px 0 6px;color:var(--bordeaux)}
 .deliver .card p{color:var(--muted);font-size:15px}
 .proclamation{margin-top:26px;padding:18px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--muted);text-align:center;font-size:15px}
+.bonus{
+  margin-top:28px;border:1.5px dashed var(--gold);border-radius:10px;padding:28px 30px;
+  background:linear-gradient(180deg,#FBF6EA,#F6EFE0);display:flex;gap:20px;align-items:flex-start
+}
+.bonus-icon{
+  flex:none;width:44px;height:44px;border-radius:50%;background:var(--bordeaux);color:#F3EBDD;
+  display:flex;align-items:center;justify-content:center;font-size:19px
+}
+.bonus-tag{
+  display:inline-block;font:600 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:#fff;
+  background:var(--gold);padding:3px 10px;border-radius:20px;margin-bottom:8px
+}
+.bonus h3{font-size:19px;margin-bottom:8px}
+.bonus p{color:var(--muted);font-size:14.5px;line-height:1.75}
+.bonus p+p{margin-top:6px}
 
 .tabs{margin-top:34px}
 .tabbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
@@ -213,6 +229,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
  .deliver{grid-template-columns:1fr 1fr}
  .flow{grid-template-columns:1fr 1fr}
  .reels{grid-template-columns:1fr 1fr}
+ .photo-quad{grid-template-columns:1fr 1fr}
  .fee-plate{grid-template-columns:1fr;gap:30px}
  .fee-divider{display:none}
 }
@@ -283,10 +300,11 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
       <span class="eyebrow">Content — 馬拉松 × 葡萄酒文化</span>
       <h3 style="font-size:24px;margin-top:14px">馬拉松 × 葡萄酒文化</h3>
       <p style="color:var(--muted)">以波爾多紅酒馬拉松為核心，延伸至酒莊、葡萄園、品飲、賽前活動與當地葡萄酒文化。</p>
-      <div class="photo-trio">
-        <div class="photo r43" style="background-image:url('assets/chateau.jpg');background-size:cover;background-position:center"><span class="photo-cap">Château</span></div>
-        <div class="photo r43" style="background-image:url('assets/vineyard.jpg');background-size:cover;background-position:center"><span class="photo-cap">Vineyard</span></div>
-        <div class="photo r43" style="background-image:url('assets/wine-tasting.jpg');background-size:cover;background-position:center"><span class="photo-cap">Wine Tasting</span></div>
+      <div class="photo-trio photo-quad">
+        <div class="photo r43" style="background-image:url('assets/tasting.jpg');background-size:cover;background-position:center"><span class="photo-cap">品酒 · Wine Tasting</span></div>
+        <div class="photo r43" style="background-image:url('assets/winemaking.jpg');background-size:cover;background-position:center"><span class="photo-cap">釀酒 · Winemaking</span></div>
+        <div class="photo r43" style="background-image:url('assets/vineyard.jpg');background-size:cover;background-position:center"><span class="photo-cap">葡萄園 · Vineyard</span></div>
+        <div class="photo r43" style="background-image:url('assets/marathon.jpg');background-size:cover;background-position:center 15%"><span class="photo-cap">馬拉松 · Marathon</span></div>
       </div>
       <div class="tags">
         <span class="tag">Wine Marathon</span><span class="tag">Mille-pâtes</span><span class="tag">Château</span><span class="tag">Vineyard</span><span class="tag">Wine Tasting</span><span class="tag">Saint-Émilion</span>
@@ -301,8 +319,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
       <h3 style="font-size:24px;margin-top:14px">法國之旅 × Lifestyle</h3>
       <p style="color:var(--muted)">從 Bordeaux、Arcachon、Dune du Pilat 到 Paris，呈現城市、餐飲、酒吧、藝術與旅程中的自然互動。</p>
       <div class="photo-trio" style="grid-template-columns:1fr 1fr">
-        <div class="photo r34"><span class="photo-cap">Arcachon</span></div>
-        <div class="photo r34"><span class="photo-cap">Paris</span></div>
+        <div class="photo r34" style="background-image:url('assets/arcachon.jpg');background-size:cover;background-position:center"><span class="photo-cap">Arcachon</span></div>
+        <div class="photo r34" style="background-image:url('assets/paris.jpg');background-size:cover;background-position:center top"><span class="photo-cap">Paris</span></div>
       </div>
       <div class="tags">
         <span class="tag">Bordeaux</span><span class="tag">Arcachon</span><span class="tag">Dune du Pilat</span><span class="tag">Paris</span><span class="tag">Fine Dining</span><span class="tag">Art & Architecture</span>
@@ -366,6 +384,16 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
   </div>
 
   <div class="proclamation">以上為本次合作完整交付內容。下方僅進一步說明執行方式與交付時間，並非額外增加的交付項目。</div>
+
+  <div class="bonus">
+    <div class="bonus-icon">🎁</div>
+    <div>
+      <span class="bonus-tag">Bonus · 視現場狀況</span>
+      <h3>額外加碼：完整旅程精選 Reels（1–2 支）</h3>
+      <p>本次以相機平面攝影為主要工作內容，旅程中同時只有一人拍攝，平面與動態難以同時兼顧，因此「一支具敘事感的完整旅程精選 Reels」目前不列入 NT$30,000 的固定交付範圍。</p>
+      <p>若這趟實際拍攝素材完整、現場執行順利，返台後願意額外剪輯 1–2 支完整旅程精選 Reels，作為這次合作額外加贈的內容；是否執行視實際拍攝狀況而定，先不作為承諾交付項目，讓現場可以專心把值得留下的畫面拍好。</p>
+    </div>
+  </div>
 
   <div class="tabs">
     <div class="tabbar">
