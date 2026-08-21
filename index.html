@@ -94,8 +94,9 @@ nav.top{position:sticky;top:0;z-index:200;background:rgba(250,247,242,.92);backd
 .hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
 .badge{
   font:500 12.5px var(--sans);letter-spacing:.03em;color:#F3EBDD;border:1px solid rgba(243,235,221,.35);
-  background:rgba(243,235,221,.06);padding:9px 16px;border-radius:20px;
+  background:rgba(243,235,221,.06);padding:9px 16px;border-radius:20px;text-decoration:none;display:inline-block;transition:150ms
 }
+a.badge:hover{background:rgba(243,235,221,.14);border-color:rgba(243,235,221,.55)}
 
 .rule{height:1px;background:var(--border);width:100%}
 section{padding:100px 0}
@@ -193,13 +194,32 @@ section.alt{background:linear-gradient(180deg,#F3EEE5,#FAF7F2)}
 .video-note b{color:var(--bordeaux);font-weight:600}
 .reels{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .reel{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
-.reel-frame{position:relative;aspect-ratio:9/16;background:linear-gradient(160deg,#5A1C2A,#1C0A0F);overflow:hidden}
-.reel-frame video{width:100%;height:100%;object-fit:cover;display:block;background:transparent}
+.reel-frame{position:relative;aspect-ratio:9/16;background:linear-gradient(160deg,#5A1C2A,#1C0A0F);overflow:hidden;display:block;text-decoration:none;transition:150ms}
+.reel-frame:hover{opacity:.9}
 .reel-frame .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:rgba(243,235,221,.78);pointer-events:none}
 .reel-frame .ph svg{width:34px;height:34px;opacity:.85}
 .reel-frame .ph span{font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase}
 .reel-info{padding:16px 18px}
 .reel-info p{color:var(--muted);font-size:14px;margin-top:6px}
+.video-more{margin-top:16px;border-top:1px solid var(--border)}
+.video-more button{width:100%;min-height:44px;border:0;background:transparent;color:var(--ink);font:500 12.5px var(--sans);display:flex;justify-content:space-between;align-items:center;cursor:pointer;padding:12px 0}
+.video-more button:hover{color:var(--bordeaux)}
+.video-more .chev{transition:.2s}
+.video-more.open .chev{transform:rotate(180deg)}
+.video-more-content{display:grid;grid-template-rows:0fr;transition:grid-template-rows .2s ease-out}
+.video-more-content>div{overflow:hidden}
+.video-more.open .video-more-content{grid-template-rows:1fr}
+.thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-bottom:4px}
+.thumb{
+  display:block;position:relative;border-radius:6px;overflow:hidden;aspect-ratio:9/16;text-decoration:none;
+  background:linear-gradient(160deg,#5A1C2A,#2B0D14 60%,#1C0A0F);transition:150ms ease-out;
+}
+.thumb:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(28,19,16,.16)}
+.thumb .thumb-play{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(243,235,221,.9);
+  background:rgba(20,7,10,.18)
+}
+.thumb .thumb-play svg{width:18px;height:18px}
 
 /* ============ timeline ============ */
 .timeline{max-width:860px;margin:36px auto 0;position:relative;padding-left:28px}
@@ -282,6 +302,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
       <span class="badge">150+ 精選照片</span>
       <span class="badge">每日快剪短影音</span>
       <span class="badge">Photography First</span>
+      <a class="badge" href="#" target="_blank" rel="noopener">查看 Christine 更多作品 ↗</a>
     </div>
   </div>
 </header>
@@ -427,50 +448,97 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
 <div class="wrap">
   <div class="section-label"><span class="eyebrow">短影音示範</span></div>
   <h2>短影音會是什麼感覺？</h2>
-  <p class="intro">以下為短影音成品呈現方式的示意版位，實際示範／參考影片確認後可直接嵌入播放，或替換為 Instagram／TikTok 貼文連結。</p>
+  <p class="intro">每個類別先放一支代表性示範影片，下方可展開看到更多不同風格的參考片段（POV、紀錄感手持等），點選縮圖會連結到該支影片。</p>
 
   <div class="video-note">
     <span>▶</span>
-    <div><b>給製作者的提醒：</b>將下方每個 <code>&lt;video&gt;</code> 的 <code>src</code> 換成實際 mp4 檔案連結（或雲端直連網址）即可直接播放；若想改用 Instagram／TikTok 貼文嵌入，改用該平台提供的 <code>&lt;blockquote&gt;</code> embed 代碼取代 video 區塊即可，版位尺寸已預留直式 9:16 比例。</div>
+    <div><b>說明：</b>每個類別的主圖與展開後的縮圖都是直接連結到對應的 Instagram Reel，點下去會開新分頁跳轉過去觀看；之後若有正式拍攝的影片檔案，也可以再換成直接嵌入播放。</div>
   </div>
 
   <div class="reels">
     <div class="reel">
-      <div class="reel-frame">
-        <video controls muted playsinline poster="" preload="none">
-          <!-- 替換 src 為實際短影音連結，例如: <source src="videos/wine-chateau.mp4" type="video/mp4"> -->
-          您的瀏覽器不支援影片播放。
-        </video>
+      <a class="reel-frame" href="https://www.instagram.com/reel/Da1z9dHRHe9/?igsi=cjdzYTliNXpjNG03" target="_blank" rel="noopener">
         <div class="ph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
-          <span>待嵌入影片</span>
+          <span>在 Instagram 觀看</span>
+        </div>
+      </a>
+      <div class="reel-info">
+        <span class="eyebrow">Reference 01 · Wine / Château</span>
+        <p>酒莊、倒酒、Cheers、環境與人物互動。</p>
+        <div class="video-more">
+          <button aria-expanded="false">查看更多參考片段 <span class="chev">⌄</span></button>
+          <div class="video-more-content"><div>
+            <div class="thumb-grid">
+              <a class="thumb" href="https://www.instagram.com/reel/DZVTonbI268/?igsi=M3l2aTZvb2J5OXV3" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DYznEx4SpbX/?igsi=ZzVza3AwczU4Y3pr" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DDS6F1CSGp-/?igsi=dXplbHJuM3U5Zm11" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DZ22OEWMs6-/?igsi=MTFtZzhmazgza2kxeg==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DMUzBGpMsn6/?igsi=MXNrbWJxOHhrYjB0aQ==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DWglUV2jI-C/?igsi=MTcxbXR2amQ1bWIzMg==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/Db03ku8MnQm/?igsi=ZjY0M3JzNGJ6Z3Zx" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DbDIot_japh/?igsi=MWd2a2RzMjVlNHVueg==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DXrUOIzCP1a/?igsi=M25pNHo4YnE3NTY3" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DbLFBoFOSSt/?igsi=MXFzajk3aG4yZG1zOA==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+            </div>
+          </div></div>
         </div>
       </div>
-      <div class="reel-info"><span class="eyebrow">Reference 01 · Wine / Château</span><p>酒莊、倒酒、Cheers、環境與人物互動。</p></div>
     </div>
     <div class="reel">
-      <div class="reel-frame">
-        <video controls muted playsinline poster="" preload="none">
-          您的瀏覽器不支援影片播放。
-        </video>
+      <a class="reel-frame" href="https://www.instagram.com/reel/DanNru6NjFj/?igsi=cWpvaGFnc2ttcmJs" target="_blank" rel="noopener">
         <div class="ph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
-          <span>待嵌入影片</span>
+          <span>在 Instagram 觀看</span>
+        </div>
+      </a>
+      <div class="reel-info">
+        <span class="eyebrow">Reference 02 · Travel / Lifestyle</span>
+        <p>城市、餐飲、街景、人物與旅行氛圍。</p>
+        <div class="video-more">
+          <button aria-expanded="false">查看更多參考片段 <span class="chev">⌄</span></button>
+          <div class="video-more-content"><div>
+            <div class="thumb-grid">
+              <a class="thumb" href="https://www.instagram.com/reel/DZCrtuIA2Mc/?igsi=aHV3YjB2Z2huaTU4" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/Da2F02uJg1g/?igsi=aDQxcWYzajNlbHcw" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DYkxNRYt4qX/?igsi=MW5jaDl4ZHZld2lxOA==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DXMpl-JCLsI/?igsi=MXczbWswdjlrbWhvNA==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DXwYgRcM_ck/?igsi=eGJsZ3V6cXRkb3I3" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DZ2MFvWow4T/?igsi=OTgzNWo0OWZ2bG53" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+            </div>
+          </div></div>
         </div>
       </div>
-      <div class="reel-info"><span class="eyebrow">Reference 02 · Travel / Lifestyle</span><p>城市、餐飲、街景、人物與旅行氛圍。</p></div>
     </div>
     <div class="reel">
-      <div class="reel-frame">
-        <video controls muted playsinline poster="" preload="none">
-          您的瀏覽器不支援影片播放。
-        </video>
+      <a class="reel-frame" href="https://www.instagram.com/reel/C0hjQ7qteP_/?igsi=MThvcTc2engwMGE5cw==" target="_blank" rel="noopener">
         <div class="ph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg>
-          <span>待嵌入影片</span>
+          <span>在 Instagram 觀看</span>
+        </div>
+      </a>
+      <div class="reel-info">
+        <span class="eyebrow">Reference 03 · Marathon Day</span>
+        <p>賽前、活動現場、跑者互動與完賽片段；風格範疇較廣，包含 POV 視角與較有紀錄感的手持片段。</p>
+        <div class="video-more">
+          <button aria-expanded="false">查看更多參考片段 <span class="chev">⌄</span></button>
+          <div class="video-more-content"><div>
+            <div class="thumb-grid">
+              <a class="thumb" href="https://www.instagram.com/reel/DIt8JzhxaK1/?igsi=MTVtcGlvamJ0b2N1eQ==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DO_bGKeiMhX/?igsi=MTVmYWkwMHM1N2p2MQ==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DO3kbl8CD9-/?igsi=cjJ0NHRkNTh1eGF2" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DB7HrASPrqA/?igsi=MWh0OXZxejU1eHF1Zw==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DYrpkQHocgZ/?igsi=OGkyZ3VqNnBxaW51" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DQw1P-Ojc2W/?igsi=cGZ6dWJjMzB4eWly" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DYu9nmoMuGQ/?igsi=MXZqeGhoem02bWJtdg==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DEn6IRgsT11/?igsi=enhkcWYwM2VsaW45" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DVsCF_Ax5ag/?igsi=MXR1NmVzaGl2Mmo1Mw==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DXjqDnVjOau/?igsi=dXFib2drbGxrdDVu" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+              <a class="thumb" href="https://www.instagram.com/reel/DVXoPZLEsL9/?igsi=MXcyeTh2bmVqNzZ4MQ==" target="_blank" rel="noopener"><span class="thumb-play"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4V8z" fill="currentColor" stroke="none"/></svg></span></a>
+            </div>
+          </div></div>
         </div>
       </div>
-      <div class="reel-info"><span class="eyebrow">Reference 03 · Marathon Day</span><p>賽前、活動現場、跑者互動與完賽片段。</p></div>
     </div>
   </div>
 </div>
@@ -534,6 +602,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--bordeaux);outline-o
 document.querySelectorAll('.details button').forEach(btn=>{
   btn.addEventListener('click',()=>{
     const box=btn.closest('.details');
+    box.classList.toggle('open');
+    btn.setAttribute('aria-expanded',box.classList.contains('open'));
+  });
+});
+document.querySelectorAll('.video-more button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const box=btn.closest('.video-more');
     box.classList.toggle('open');
     btn.setAttribute('aria-expanded',box.classList.contains('open'));
   });
